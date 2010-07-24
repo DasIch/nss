@@ -3,8 +3,17 @@
     nss
     ~~~
 
-    nested style sheets is an implementation of CleverCSS, a
-    pythonic approach to CSS developed by Armin Ronacher and Georg Brandl.
+    Nested style sheets are a way to define style sheets which can be compiled
+    to CSS. NSS is heavily inspired by `CleverCSS`_ and aims to be completely
+    "backwards" compatible to it while adding further syntax constructs.
+
+    `CleverCSS`_ was developed by Armin Ronacher and Georg Brandl under the BSD
+    license. 
+
+    .. _CleverCSS: http://sandbox.pocoo.org/clevercss/
+
+    :copyright: 2010 by Daniel Neuhäuser
+    :license: BSD
 """
 import re
 from collections import namedtuple, deque
