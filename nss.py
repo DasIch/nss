@@ -300,13 +300,9 @@ class Parser(object):
         return symbol_cls(self, token.value, token.lineno)
 
     def next_symbol(self):
-        print 'next symbol'
         token = self._tokenizer.next()
-        print token
         sym = self.symbol_for_token(token)
-        print sym.id, repr(sym.value), sym.lineno
         self.symbols.append(sym)
-        print 'next symbol end'
         return sym
 
     def peek_symbol(self):
@@ -342,58 +338,34 @@ class Parser(object):
         )
 
     def parse_expression(self, rbp=0):
-        print 'parse expression', rbp
-        print self.symbol.id, self.symbol.value, self.symbol.lbp
         left_symbol, self.symbol = self.symbol, self.next_symbol()
-        print self.symbol.id, self.symbol.value, self.symbol.lbp
-        print 'null denotation'
         left_denotation = left_symbol.nud()
-        print 'null denotation end'
         while rbp < self.symbol.lbp:
             left_symbol, self.symbol = self.symbol, self.next_symbol()
-            print self.symbol.id, self.symbol.value, self.symbol.lbp
-            print 'left denotation'
             left_denotation = left_symbol.led(left_denotation)
-            print 'left denotation end'
-        print 'parse expression end'
         return left_denotation
 
     def parse_statement(self):
-        print 'parse statement'
-        print self.symbol.id, self.symbol.value
         statement_symbol = self.symbol
         self.symbol = self.next_symbol()
-        print self.symbol.id, self.symbol.value
-        print 'statement denotation'
         result = statement_symbol.std()
-        print 'statement denotation end'
-        print 'parse statement end'
         return result
 
     def parse_statements(self):
-        print 'parse statements'
         result = []
         while self.symbol.id not in ['end-statement', 'end']:
-            print self.symbol.id, self.symbol.value
             if hasattr(self.symbol, 'std'):
                 result.append(self.parse_statement())
             else:
                 result.append(self.parse_expression())
-            #try:
-            #    self.symbol = self.next_symbol()
-            #except StopIteration:
-            #    return result
-        print 'parse statements end'
         return result
 
     def parse(self, tokenizer):
-        print 'parsing'
         self._tokenizer = tokenizer
         self.symbol = self.next_symbol()
         root = Root(self, Root.id, 0)
         root.body = self.parse_statements()
         del self._tokenizer
-        print 'parsing end'
         return root
 
 class Tokenizer(object):
